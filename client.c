@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   client.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yregragu <yregragu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ryuuk_reg <ryuuk_reg@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 15:40:49 by yregragu          #+#    #+#             */
-/*   Updated: 2024/05/02 00:55:17 by yregragu         ###   ########.fr       */
+/*   Updated: 2024/05/02 20:25:52 by ryuuk_reg        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <signal.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <stddef.h>
 
 
 int ft_atoi(char *str)
@@ -46,13 +47,12 @@ size_t ft_strlen(char *str)
 
 char *message;
 
-void send(int pid)
+void send_bit(int pid)
 {
 	static size_t	i;
 	static size_t	len;
 	static int	bit;
 
-	bit = 0;
 	len = ft_strlen(message);
 	if (i < len)
 	{
@@ -73,10 +73,9 @@ void send(int pid)
 
 void	handler(int signum, siginfo_t *info, void *pointer)
 {
-	if(pointer)
-		pointer = NULL;
+	(void)pointer;
 	if (SIGUSR1 == signum)
-		send(info->si_pid);
+		send_bit(info->si_pid);
 	else if(SIGUSR2 == signum)
 		exit(1);
 }
@@ -88,19 +87,18 @@ int main(int ac, char **av)
 	
 	if (ac == 3)
 	{
-		pid = ft_atoi(av[2]);
-		message = av[3];
+		pid = ft_atoi(av[1]);
+		message = av[2];
 	
 		signal.sa_flags = SA_SIGINFO;		//special to affect behavior of signal   //sa_mask : additional set of signals to be blocked during execution of signal catching function
 		signal.sa_sigaction = handler;		//apointer to a signal catching function 
+		sigemptyset(&signal.sa_mask);
 		sigaction(SIGUSR1, &signal, NULL);
 		sigaction(SIGUSR2, &signal, NULL);
-		send(pid);
+		send_bit(pid);
 		
 		while(1)
-		{
 			pause();		
-		}
 		return(0);
 	}
 	return(1);

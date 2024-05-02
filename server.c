@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   server.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yregragu <yregragu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ryuuk_reg <ryuuk_reg@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 15:40:40 by yregragu          #+#    #+#             */
-/*   Updated: 2024/05/02 00:55:51 by yregragu         ###   ########.fr       */
+/*   Updated: 2024/05/02 20:23:29 by ryuuk_reg        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <signal.h>
 #include <unistd.h>
-
+#include <stdlib.h>
+#include <stddef.h>
 
 
 void	ft_putnbr(int nbr)
@@ -25,7 +26,7 @@ void	ft_putnbr(int nbr)
 	write(1, &c, 1);
 }
 
-handel_pid(int count, int pid, int info_pid)
+void handel_pid(int *pid, int info_pid)
 {
 	if (*pid == 0)
 		*pid = info_pid;
@@ -34,7 +35,7 @@ handel_pid(int count, int pid, int info_pid)
 		if(kill(*pid, 0) == -1)
 		{
 			*pid = 0;
-			 count = 0;
+			// count = 0;
 		}
 		else
 			kill(info_pid, SIGUSR2);
@@ -48,10 +49,11 @@ void	message_handler(int signum, siginfo_t *info, void *pointer)
 	static char c;
 	static int	pid;
 
-	pointer = NULL;
-	c = 0;
-	pid =0 ;
-	handel_pid(&count, &pid, info->si_pid);
+	(void)pointer;
+	if (pid == 0)
+		pid = info->si_pid;
+	
+	handel_pid(&pid, info->si_pid);
 	c = (c << 1) | (signum == SIGUSR1);
 	count++;
 	if(count % 8 == 0)
@@ -75,7 +77,7 @@ int main(int ac, char **av)
 	struct sigaction	signal;
 	int					pid;
 	
-	av = NULL;
+	(void)av;
 	if (ac == 1)
 	{
 		pid = getpid();
@@ -85,7 +87,7 @@ int main(int ac, char **av)
 		signal.sa_sigaction = message_handler;
 		sigaction(SIGUSR1, &signal, NULL);
 		sigaction(SIGUSR2, &signal, NULL);
-		
+	
 		while (1)
 		{
 			pause();
