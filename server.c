@@ -6,7 +6,7 @@
 /*   By: ryuuk_reg <ryuuk_reg@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 15:40:40 by yregragu          #+#    #+#             */
-/*   Updated: 2024/05/02 20:23:29 by ryuuk_reg        ###   ########.fr       */
+/*   Updated: 2024/05/03 16:23:24 by ryuuk_reg        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,7 @@ void handel_pid(int *pid, int info_pid)
 	if (*pid != info_pid)
 	{
 		if(kill(*pid, 0) == -1)
-		{
 			*pid = 0;
-			// count = 0;
-		}
 		else
 			kill(info_pid, SIGUSR2);
 	}

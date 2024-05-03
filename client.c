@@ -6,7 +6,7 @@
 /*   By: ryuuk_reg <ryuuk_reg@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 15:40:49 by yregragu          #+#    #+#             */
-/*   Updated: 2024/05/02 20:25:52 by ryuuk_reg        ###   ########.fr       */
+/*   Updated: 2024/05/03 17:22:01 by ryuuk_reg        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void send_bit(int pid)
 	static int	bit;
 
 	len = ft_strlen(message);
-	if (i < len)
+	if (i <= len)
 	{
 		if ((message[i] >> (7 - bit)) & 1)
 			kill(pid, SIGUSR1);
