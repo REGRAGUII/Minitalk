@@ -6,7 +6,7 @@
 /*   By: yregragu <yregragu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 21:07:44 by yregragu          #+#    #+#             */
-/*   Updated: 2024/05/03 23:42:44 by yregragu         ###   ########.fr       */
+/*   Updated: 2024/05/04 14:47:02 by yregragu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ size_t	ft_strlen(char *str)
 	return (i);
 }
 
-static char *g_message;
+static char	*g_message;
+
 void	send_bit(int pid)
 {
 	static size_t	i;
@@ -84,11 +85,11 @@ int	main(int ac, char **av)
 		g_message = av[2];
 		if (pid == 0 || kill(pid, 0) == -1)
 		{
-			write(1, "wrong pid", 9);
+			write(1, "wrong pid\n", 9);
 			exit(1);
 		}
-		signal.sa_flags = SA_SIGINFO;  // special to affect behavior of signal   //sa_mask : additional set of signals to be blocked during execution of signal catching function
-		signal.sa_sigaction = handler; // apointer to a signal catching function
+		signal.sa_flags = SA_SIGINFO;
+		signal.sa_sigaction = handler;
 		sigemptyset(&signal.sa_mask);
 		sigaction(SIGUSR1, &signal, NULL);
 		sigaction(SIGUSR2, &signal, NULL);
